@@ -63,3 +63,28 @@ exports.updateSetting = async (req, res) => {
     res.status(500).json({ error: error.message || "Failed to update setting" });
   }
 };
+
+exports.adminLogin = async (req, res) => {
+  try {
+    const { email, username, password } = req.body;
+    const inputUser = (email || username || "").trim().toLowerCase();
+
+    // Query DB for admin_auth credentials
+    const adminDoc = await Setting.findOne({ key: "admin_auth" });
+    const expectedUser = (adminDoc?.value?.username || adminDoc?.value?.email || "admingrandin12@gmail.com").trim().toLowerCase();
+    const expectedPass = adminDoc?.value?.password || "Grandin@123#";
+
+    if (inputUser === expectedUser && password === expectedPass) {
+      return res.json({
+        success: true,
+        role: "admin",
+        username: expectedUser,
+        message: "Admin authentication successful",
+      });
+    }
+
+    return res.status(401).json({ error: "Invalid admin credentials" });
+  } catch (error) {
+    res.status(500).json({ error: error.message || "Admin login verification failed" });
+  }
+};
