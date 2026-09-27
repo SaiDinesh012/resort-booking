@@ -27,6 +27,13 @@ exports.getSetting = async (req, res) => {
         aboutYearsLabel: "Years of Luxury Hospitality",
         aboutLink: "/resort",
         aboutLinkText: "Discover More About Us",
+        // Operational Timings & Overstay Settings
+        checkInTime: "12:00 PM",
+        checkOutTime: "11:00 AM",
+        overstayGraceMinutes: 30,
+        overstayHourlyRate: 500,
+        earlyCheckInHourlyRate: 400,
+        cleaningBufferMinutes: 45,
       };
 
       if (!setting) {

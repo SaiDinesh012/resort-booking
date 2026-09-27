@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Booking = require("../models/Booking");
+const Room = require("../models/Room");
 const Customer = require("../models/Customer");
 const Payment = require("../models/Payment");
 
@@ -49,6 +50,12 @@ exports.createBooking = async (req, res) => {
       packageName: body.packageName,
       checkIn: body.checkIn,
       checkOut: body.checkOut,
+      estimatedCheckInTime: body.estimatedCheckInTime || "12:00 PM - 02:00 PM",
+      estimatedCheckOutTime: body.estimatedCheckOutTime || "10:00 AM - 11:00 AM",
+      actualCheckIn: body.actualCheckIn,
+      actualCheckOut: body.actualCheckOut,
+      overstayHours: body.overstayHours || 0,
+      overstayCharges: body.overstayCharges || 0,
       nights: body.nights || 1,
       adults: body.adults || 1,
       children: body.children || 0,
@@ -56,7 +63,7 @@ exports.createBooking = async (req, res) => {
       priceBreakdown: body.priceBreakdown,
       paymentStatus: body.paymentStatus || "paid",
       paymentMethod: body.paymentMethod || "card",
-      bookingStatus: "confirmed",
+      bookingStatus: body.bookingStatus || "confirmed",
       notes: body.notes || "Booked online via Website",
       timeline: [
         {
@@ -67,6 +74,24 @@ exports.createBooking = async (req, res) => {
         },
       ],
     });
+
+    // Auto-lock room if roomId is provided
+    if (body.roomId) {
+      const roomFilter = mongoose.Types.ObjectId.isValid(body.roomId)
+        ? { $or: [{ id: body.roomId }, { _id: body.roomId }] }
+        : { id: body.roomId };
+
+      await Room.findOneAndUpdate(
+        roomFilter,
+        {
+          $set: {
+            status: body.bookingStatus === "checked-in" ? "occupied" : "occupied",
+            lockedUntil: body.checkOut,
+            currentBookingId: bookingId,
+          },
+        }
+      );
+    }
 
     // Auto update or create Customer
     if (body.guestDetails?.email) {
@@ -86,7 +111,7 @@ exports.createBooking = async (req, res) => {
           address: body.guestDetails.address,
           city: body.guestDetails.city,
           country: body.guestDetails.country || "India",
-            password: body.guestDetails.password,
+          password: body.guestDetails.password,
           totalBookings: 1,
           totalSpend: body.priceBreakdown?.total || 0,
           lastBookingDate: new Date().toISOString(),
@@ -130,6 +155,14 @@ exports.updateBooking = async (req, res) => {
     const booking = await Booking.findOne(filter);
     if (!booking) return res.status(404).json({ error: "Booking not found" });
 
+    // Handle in-time and out-time transitions
+    if (body.bookingStatus === "checked-in" && !body.actualCheckIn && !booking.actualCheckIn) {
+      body.actualCheckIn = new Date().toISOString();
+    }
+    if (body.bookingStatus === "checked-out" && !body.actualCheckOut && !booking.actualCheckOut) {
+      body.actualCheckOut = new Date().toISOString();
+    }
+
     if (body.bookingStatus && body.bookingStatus !== booking.bookingStatus) {
       booking.timeline.push({
         timestamp: new Date().toISOString(),
@@ -141,6 +174,28 @@ exports.updateBooking = async (req, res) => {
 
     Object.assign(booking, body);
     await booking.save();
+
+    // Synchronize room status with booking status
+    const targetRoomId = booking.roomId || body.roomId;
+    if (targetRoomId) {
+      const roomFilter = mongoose.Types.ObjectId.isValid(targetRoomId)
+        ? { $or: [{ id: targetRoomId }, { _id: targetRoomId }] }
+        : { id: targetRoomId };
+
+      if (body.bookingStatus === "checked-in") {
+        await Room.findOneAndUpdate(roomFilter, {
+          $set: { status: "occupied", currentBookingId: booking.id, lockedUntil: booking.checkOut }
+        });
+      } else if (body.bookingStatus === "checked-out") {
+        await Room.findOneAndUpdate(roomFilter, {
+          $set: { status: "cleaning", currentBookingId: null, lockedUntil: null }
+        });
+      } else if (body.bookingStatus === "cancelled") {
+        await Room.findOneAndUpdate(roomFilter, {
+          $set: { status: "available", currentBookingId: null, lockedUntil: null }
+        });
+      }
+    }
 
     res.json(booking);
   } catch (error) {
