@@ -25,7 +25,7 @@ const RoomSchema = new mongoose.Schema(
     taxRate: { type: Number, default: 0.18 },
     status: {
       type: String,
-      enum: ["available", "occupied", "maintenance", "blocked", "active", "inactive"],
+      enum: ["available", "occupied", "maintenance", "blocked", "cleaning", "active", "inactive"],
       default: "available",
     },
     rating: { type: Number, default: 4.8 },
@@ -33,6 +33,8 @@ const RoomSchema = new mongoose.Schema(
     featured: { type: Boolean, default: false },
     floorLevel: { type: String, default: "" },
     view: { type: String, default: "" },
+    currentBookingId: { type: String },
+    lockedUntil: { type: String },
   },
   { timestamps: true }
 );
