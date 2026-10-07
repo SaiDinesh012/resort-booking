@@ -54,16 +54,17 @@ exports.seedData = async (req, res) => {
     await Setting.create({
       key: "site_config",
       value: {
-        siteName: "Vanapriya Resort",
+        siteName: "Royal Gradin",
         tagline: "Where Wilderness Meets Luxury",
-        description: "Nestled in the heart of the Western Ghats, Vanapriya Resort offers an unparalleled luxury escape.",
+        description: "Nestled in the heart of pristine nature, Royal Gradin offers an unparalleled luxury escape.",
+        logoUrl: "",
         phone: "+91 98765 43210",
-        email: "reservations@vanapriya.com",
+        email: "reservations@royalgradin.com",
         address: "Survey No. 45, Chikmagalur-Koppa Road, Karnataka 577111, India",
         taxRate: 18,
         currency: "INR",
-        heroImage: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1600&q=80",
-        heroTitle: "Luxury Escape in the Western Ghats",
+        heroImage: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1920&q=90",
+        heroTitle: "Luxury Escape at Royal Gradin",
         heroSubtitle: "Where Wilderness Meets Unrivaled Sophistication",
       },
     });

@@ -125,7 +125,7 @@ const mockReviews = [
     customerAvatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80",
     rating: 5,
     title: "An absolutely magical experience!",
-    body: "Vanapriya Resort exceeded every expectation. The forest views from our suite were breathtaking, the staff were exceptionally attentive, and the food was outstanding.",
+    body: "Royal Gradin exceeded every expectation. The forest views from our suite were breathtaking, the staff were exceptionally attentive, and the food was outstanding.",
     roomId: "room-002",
     createdAt: "2024-11-20T00:00:00Z",
     status: "published",

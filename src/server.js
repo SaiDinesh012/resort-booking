@@ -12,7 +12,8 @@ connectDB();
 
 // Middleware
 app.use(cors({ origin: "*" }));
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 // Routes
 app.use("/api/seed", require("./routes/seedRoutes"));
@@ -27,7 +28,7 @@ app.use("/api/settings", require("./routes/settingRoutes"));
 
 // Health check endpoint
 app.get("/", (req, res) => {
-  res.json({ status: "online", message: "Resort Booking Express API Server Running" });
+  res.json({ status: "online", message: "Royal Gradin Resort Booking Express API Server Running" });
 });
 
 const PORT = process.env.PORT || 5000;
