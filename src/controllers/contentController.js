@@ -1,4 +1,4 @@
-const { BlogPost, Review, FAQ, Attraction } = require("../models/Content");
+const { BlogPost, Review, FAQ, Attraction, Experience } = require("../models/Content");
 
 exports.getContent = async (req, res) => {
   try {
@@ -27,6 +27,13 @@ exports.getContent = async (req, res) => {
     if (contentType === "attraction") {
       const attractions = await Attraction.find({}).sort({ createdAt: -1 });
       return res.json(attractions);
+    }
+
+    if (contentType === "experience") {
+      const query = {};
+      if (status) query.status = status;
+      const experiences = await Experience.find(query).sort({ order: 1, createdAt: -1 });
+      return res.json(experiences);
     }
 
     res.status(400).json({ error: "Invalid content type" });
@@ -63,6 +70,12 @@ exports.getContentById = async (req, res) => {
       const attraction = await Attraction.findOne({ id });
       if (!attraction) return res.status(404).json({ error: "Attraction not found" });
       return res.json(attraction);
+    }
+
+    if (contentType === "experience") {
+      const exp = await Experience.findOne({ id });
+      if (!exp) return res.status(404).json({ error: "Experience not found" });
+      return res.json(exp);
     }
 
     res.status(400).json({ error: "Invalid content type" });
@@ -102,6 +115,12 @@ exports.createContent = async (req, res) => {
       return res.status(201).json(newAttraction);
     }
 
+    if (contentType === "experience") {
+      const id = body.id || `exp-${Date.now()}`;
+      const newExperience = await Experience.create({ ...body, id });
+      return res.status(201).json(newExperience);
+    }
+
     res.status(400).json({ error: "Invalid content type" });
   } catch (error) {
     res.status(500).json({ error: error.message || "Failed to create content item" });
@@ -135,6 +154,11 @@ exports.updateContent = async (req, res) => {
       return res.json(updated);
     }
 
+    if (contentType === "experience") {
+      const updated = await Experience.findOneAndUpdate({ id }, { $set: body }, { new: true });
+      return res.json(updated);
+    }
+
     res.status(400).json({ error: "Invalid content type" });
   } catch (error) {
     res.status(500).json({ error: error.message || "Failed to update content item" });
@@ -165,6 +189,11 @@ exports.deleteContent = async (req, res) => {
     if (contentType === "attraction") {
       await Attraction.findOneAndDelete({ id });
       return res.json({ success: true, message: "Attraction deleted" });
+    }
+
+    if (contentType === "experience") {
+      await Experience.findOneAndDelete({ id });
+      return res.json({ success: true, message: "Experience deleted" });
     }
 
     res.status(400).json({ error: "Invalid content type" });

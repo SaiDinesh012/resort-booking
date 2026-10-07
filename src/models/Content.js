@@ -81,9 +81,34 @@ const AttractionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+const ExperienceSchema = new mongoose.Schema(
+  {
+    id: { type: String, required: true, unique: true },
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    image: { type: String, required: true },
+    category: {
+      type: String,
+      enum: ["wellness", "dining", "adventure", "nature", "cultural"],
+      default: "wellness",
+    },
+    duration: { type: String, default: "1-2 hours" },
+    price: { type: Number, default: 0 },
+    featured: { type: Boolean, default: true },
+    status: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "active",
+    },
+    order: { type: Number, default: 0 },
+  },
+  { timestamps: true }
+);
+
 const BlogPost = mongoose.models.BlogPost || mongoose.model("BlogPost", BlogPostSchema);
 const Review = mongoose.models.Review || mongoose.model("Review", ReviewSchema);
 const FAQ = mongoose.models.FAQ || mongoose.model("FAQ", FAQSchema);
 const Attraction = mongoose.models.Attraction || mongoose.model("Attraction", AttractionSchema);
+const Experience = mongoose.models.Experience || mongoose.model("Experience", ExperienceSchema);
 
-module.exports = { BlogPost, Review, FAQ, Attraction };
+module.exports = { BlogPost, Review, FAQ, Attraction, Experience };

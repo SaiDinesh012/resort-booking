@@ -25,6 +25,10 @@ app.use("/api/payments", require("./routes/paymentRoutes"));
 app.use("/api/media", require("./routes/mediaRoutes"));
 app.use("/api/content", require("./routes/contentRoutes"));
 app.use("/api/settings", require("./routes/settingRoutes"));
+app.use("/api/availability", require("./routes/availabilityRoutes"));
+app.use("/api/contact", require("./routes/inquiryRoutes"));
+app.use("/api/legal", require("./routes/legalRoutes"));
+app.use("/api/newsletter", require("./routes/newsletterRoutes"));
 
 // Health check endpoint
 app.get("/", (req, res) => {
