@@ -61,3 +61,47 @@ exports.getSubscribers = async (req, res) => {
     return res.status(500).json({ error: "Failed to fetch subscribers." });
   }
 };
+
+// PATCH /api/newsletter - Update subscriber status
+exports.updateSubscriber = async (req, res) => {
+  try {
+    const { id, email, status } = req.body;
+    const query = id ? { _id: id } : { email: email?.toLowerCase().trim() };
+
+    const updated = await NewsletterSubscriber.findOneAndUpdate(
+      query,
+      { $set: { status: status || "active" } },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ error: "Subscriber not found" });
+    }
+
+    return res.status(200).json({ success: true, subscriber: updated });
+  } catch (error) {
+    console.error("Update subscriber error:", error);
+    return res.status(500).json({ error: "Failed to update subscriber." });
+  }
+};
+
+// DELETE /api/newsletter - Remove subscriber
+exports.deleteSubscriber = async (req, res) => {
+  try {
+    const id = req.query.id || req.body?.id;
+    const email = req.query.email || req.body?.email;
+
+    const query = id ? { _id: id } : { email: email?.toLowerCase().trim() };
+    const deleted = await NewsletterSubscriber.findOneAndDelete(query);
+
+    if (!deleted) {
+      return res.status(404).json({ error: "Subscriber not found" });
+    }
+
+    return res.status(200).json({ success: true, message: "Subscriber removed successfully." });
+  } catch (error) {
+    console.error("Delete subscriber error:", error);
+    return res.status(500).json({ error: "Failed to delete subscriber." });
+  }
+};
+
