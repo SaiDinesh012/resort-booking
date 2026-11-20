@@ -1,5 +1,4 @@
 const Room = require("../models/Room");
-const { mockRooms } = require("../data/mockData");
 
 // @desc    Get all rooms
 // @route   GET /api/rooms
@@ -11,12 +10,7 @@ exports.getRooms = async (req, res) => {
     if (status) query.status = status;
     if (featured === "true") query.featured = true;
 
-    let rooms = await Room.find(query).sort({ createdAt: -1 });
-
-    if (rooms.length === 0 && Object.keys(query).length === 0) {
-      await Room.insertMany(mockRooms);
-      rooms = await Room.find({}).sort({ createdAt: -1 });
-    }
+    const rooms = await Room.find(query).sort({ createdAt: -1 });
 
     res.json(rooms);
   } catch (error) {
@@ -29,15 +23,7 @@ exports.getRooms = async (req, res) => {
 exports.getRoomById = async (req, res) => {
   try {
     const { id } = req.params;
-    let room = await Room.findOne({ $or: [{ id }, { slug: id }] });
-
-    if (!room) {
-      const mockMatch = mockRooms.find((r) => r.id === id || r.slug === id);
-      if (mockMatch) {
-        await Room.create(mockMatch);
-        room = await Room.findOne({ $or: [{ id }, { slug: id }] });
-      }
-    }
+    const room = await Room.findOne({ $or: [{ id }, { slug: id }] });
 
     if (!room) return res.status(404).json({ error: "Room not found" });
     res.json(room);
