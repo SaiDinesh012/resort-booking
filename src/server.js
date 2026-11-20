@@ -22,6 +22,8 @@ app.use("/api/packages", require("./routes/packageRoutes"));
 app.use("/api/bookings", require("./routes/bookingRoutes"));
 app.use("/api/customers", require("./routes/customerRoutes"));
 app.use("/api/payments", require("./routes/paymentRoutes"));
+app.use("/api/dashboard", require("./routes/dashboardRoutes"));
+app.use("/api/admin/dashboard", require("./routes/dashboardRoutes"));
 app.use("/api/media", require("./routes/mediaRoutes"));
 app.use("/api/content", require("./routes/contentRoutes"));
 app.use("/api/settings", require("./routes/settingRoutes"));
