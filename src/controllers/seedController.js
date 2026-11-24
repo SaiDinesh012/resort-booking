@@ -11,6 +11,15 @@ const { mockRooms, mockPackages, mockReviews, mockFAQs, mockAttractions } = requ
 exports.seedData = async (req, res) => {
   try {
     const force = req.query.force === "true";
+    const secret = req.query.secret || req.headers["x-seed-secret"];
+    const expectedSecret = process.env.ADMIN_SEED_SECRET || "GrandinSeedSecret2026";
+
+    if (force && secret !== expectedSecret) {
+      return res.status(401).json({
+        error: "Unauthorized. A valid seed secret (?secret=...) is required to force reseed the database.",
+      });
+    }
+
     const roomCount = await Room.countDocuments();
 
     if (roomCount > 0 && !force) {

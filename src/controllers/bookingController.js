@@ -31,8 +31,53 @@ exports.getBookingById = async (req, res) => {
 exports.createBooking = async (req, res) => {
   try {
     const body = req.body;
+
+    // Validate dates
+    if (!body.checkIn || !body.checkOut) {
+      return res.status(400).json({ error: "Check-in and Check-out dates are required." });
+    }
+
+    const checkInDate = new Date(body.checkIn);
+    const checkOutDate = new Date(body.checkOut);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (isNaN(checkInDate.getTime()) || isNaN(checkOutDate.getTime())) {
+      return res.status(400).json({ error: "Invalid date format." });
+    }
+
+    if (checkInDate < today) {
+      return res.status(400).json({ error: "Check-in date cannot be in the past." });
+    }
+
+    if (checkOutDate <= checkInDate) {
+      return res.status(400).json({ error: "Check-out date must be after check-in date." });
+    }
+
+    // Check overlapping bookings
+    if (body.roomId) {
+      const overlappingCount = await Booking.countDocuments({
+        roomId: body.roomId,
+        bookingStatus: { $nin: ["cancelled"] },
+        $or: [
+          {
+            checkIn: { $lt: body.checkOut },
+            checkOut: { $gt: body.checkIn },
+          },
+        ],
+      });
+      if (overlappingCount >= 5) {
+        return res.status(409).json({
+          error: "Selected accommodation is fully booked for these dates. Please choose alternate dates.",
+        });
+      }
+    }
+
     const bookingId = `book-${Date.now()}`;
-    const bookingNumber = `VP-${Math.floor(100000 + Math.random() * 900000)}`;
+    const bookingNumber = `RG-${Math.floor(100000 + Math.random() * 900000)}`;
+
+    const paymentMethod = body.paymentMethod || "pay_at_resort";
+    const paymentStatus = body.paymentStatus === "paid" ? "paid" : "pending";
 
     const newBooking = await Booking.create({
       id: bookingId,
@@ -49,16 +94,16 @@ exports.createBooking = async (req, res) => {
       children: body.children || 0,
       guestDetails: body.guestDetails,
       priceBreakdown: body.priceBreakdown,
-      paymentStatus: body.paymentStatus || "paid",
-      paymentMethod: body.paymentMethod || "card",
+      paymentStatus,
+      paymentMethod,
       bookingStatus: "confirmed",
-      notes: body.notes || "Booked online via Website",
+      notes: body.notes || "Booked online via Royalgrandin Resort Website",
       timeline: [
         {
           timestamp: new Date().toISOString(),
           event: "Booking Created",
-          description: `Booking #${bookingNumber} created successfully`,
-          actor: `${body.guestDetails?.firstName} ${body.guestDetails?.lastName}`,
+          description: `Booking #${bookingNumber} confirmed`,
+          actor: `${body.guestDetails?.firstName || "Guest"} ${body.guestDetails?.lastName || ""}`,
         },
       ],
     });
