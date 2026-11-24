@@ -5,11 +5,11 @@ const defaultPolicies = [
   {
     slug: "privacy-policy",
     title: "Privacy Policy",
-    subtitle: "How Royal Grand IN Resorts protects and respects your personal privacy",
+    subtitle: "How Royalgrandin Resort protects and respects your personal privacy",
     lastUpdated: "October 2026",
     status: "published",
     order: 1,
-    content: "## 1. Introduction\\nAt Royal Grand IN Resorts (Maredumilli, Andhra Pradesh), we hold the privacy and trust of our guests in the highest regard.",
+    content: "## 1. Introduction\\nAt Royalgrandin Resort (Maredumilli, Andhra Pradesh), we hold the privacy and trust of our guests in the highest regard.",
   },
   {
     slug: "terms-and-conditions",

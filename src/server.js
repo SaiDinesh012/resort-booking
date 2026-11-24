@@ -34,7 +34,7 @@ app.use("/api/newsletter", require("./routes/newsletterRoutes"));
 
 // Health check endpoint
 app.get("/", (req, res) => {
-  res.json({ status: "online", message: "Royal Gradin Resort Booking Express API Server Running" });
+  res.json({ status: "online", message: "Royalgrandin Resort Booking Express API Server Running" });
 });
 
 const PORT = process.env.PORT || 5000;

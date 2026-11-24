@@ -48,7 +48,7 @@ exports.createRoom = async (req, res) => {
       ...body,
       id,
       slug,
-      images: body.images?.length ? body.images : ["https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80"],
+      images: Array.isArray(body.images) ? body.images : [],
     });
 
     res.status(201).json(newRoom);

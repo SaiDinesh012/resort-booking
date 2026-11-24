@@ -30,6 +30,7 @@ const ReviewSchema = new mongoose.Schema(
     id: { type: String, required: true, unique: true },
     customerId: { type: String, required: true },
     customerName: { type: String, required: true },
+    customerCity: { type: String },
     customerAvatar: { type: String },
     bookingId: { type: String },
     rating: { type: Number, required: true, min: 1, max: 5 },

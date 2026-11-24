@@ -4,18 +4,18 @@ const cloudinary = require("../config/cloudinary");
 // Initial site configuration seeded into MongoDB on first run.
 // This is stored in DB, NOT used as a static fallback on every request.
 const INITIAL_SITE_CONFIG = {
-  siteName: "Royal Grand IN Resorts",
+  siteName: "Royalgrandin Resort",
   tagline: "Stay Once, Carry Memories Forever",
   description:
-    "Nestled amidst the lush forests and serene landscapes of Maredumilli, Royal Grand IN Resorts offers an unparalleled luxury escape where royalty meets the wild.",
+    "Nestled amidst the lush forests and serene landscapes of Maredumilli, Royalgrandin Resort offers an unparalleled luxury escape where royalty meets the wild.",
   footerDescription:
-    "Nestled amidst the lush forests and tranquil canopy of Maredumilli, Royal Grand IN Resorts offers a refined sanctuary where luxury harmonizes with pristine nature.",
+    "Nestled amidst the lush forests and tranquil canopy of Maredumilli, Royalgrandin Resort offers a refined sanctuary where luxury harmonizes with pristine nature.",
   logoUrl: "",
   phone: "+91 98765 43210",
   alternatePhone: "+91 94949 12345",
   email: "reservations@royalgrandin.com",
   address: "Maredumilli, East Godavari District, Andhra Pradesh 533288, India",
-  googleMapsUrl: "https://maps.google.com/?q=Royal+Grand+IN+Resorts+Maredumilli+Andhra+Pradesh",
+  googleMapsUrl: "https://maps.google.com/?q=Royalgrandin+Resort+Maredumilli+Andhra+Pradesh",
   instagramUrl: "https://instagram.com/royalgrandinresorts",
   facebookUrl: "https://facebook.com/royalgrandinresorts",
   youtubeUrl: "https://youtube.com/@royalgrandinresorts",
@@ -23,7 +23,7 @@ const INITIAL_SITE_CONFIG = {
   tripadvisorUrl: "",
   newsletterHeading: "Subscribe to our Newsletter",
   newsletterSubheading: "Seasonal offers, curated packages and resort stories — in your inbox.",
-  copyrightText: "© {year} Royal Grand IN Resorts. All rights reserved.",
+  copyrightText: "© {year} Royalgrandin Resort. All rights reserved.",
   footerLocationNote: "Maredumilli, East Godavari District, Andhra Pradesh, India",
   checkInTime: "02:00 PM",
   checkOutTime: "11:00 AM",
@@ -57,8 +57,8 @@ exports.getSetting = async (req, res) => {
     let val = setting.value ? { ...setting.value } : {};
     let needsMigration = false;
 
-    if (val.siteName === "Vanapriya Resort" || val.siteName === "Royal Gradin" || !val.siteName) {
-      val.siteName = "Royal Grand IN Resorts";
+    if (val.siteName === "Vanapriya Resort" || val.siteName === "Royal Gradin" || val.siteName === "Royal Grand IN Resorts" || !val.siteName) {
+      val.siteName = "Royalgrandin Resort";
       needsMigration = true;
     }
     if (val.tagline === "Where Wilderness Meets Luxury" || val.tagline === "Mothugudem, Andhra Pradesh" || !val.tagline) {

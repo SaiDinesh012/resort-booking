@@ -41,7 +41,7 @@ exports.createPackage = async (req, res) => {
       ...body,
       id,
       slug,
-      images: body.images?.length ? body.images : ["https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&q=80"],
+      images: Array.isArray(body.images) ? body.images : [],
     });
 
     res.status(201).json(newPackage);

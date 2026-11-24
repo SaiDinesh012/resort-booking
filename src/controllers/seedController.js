@@ -54,18 +54,18 @@ exports.seedData = async (req, res) => {
     await Setting.create({
       key: "site_config",
       value: {
-        siteName: "Royal Gradin",
-        tagline: "Where Wilderness Meets Luxury",
-        description: "Nestled in the heart of pristine nature, Royal Gradin offers an unparalleled luxury escape.",
+        siteName: "Royalgrandin Resort",
+        tagline: "Stay Once, Carry Memories Forever",
+        description: "Nestled amidst the lush forests and serene landscapes of Maredumilli, Royalgrandin Resort offers an unparalleled luxury escape where royalty meets the wild.",
         logoUrl: "",
         phone: "+91 98765 43210",
-        email: "reservations@royalgradin.com",
-        address: "Survey No. 45, Chikmagalur-Koppa Road, Karnataka 577111, India",
+        email: "reservations@royalgrandin.com",
+        address: "Maredumilli, East Godavari District, Andhra Pradesh 533288, India",
         taxRate: 18,
         currency: "INR",
         heroImage: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1920&q=90",
-        heroTitle: "Luxury Escape at Royal Gradin",
-        heroSubtitle: "Where Wilderness Meets Unrivaled Sophistication",
+        heroTitle: "Where Royalty Meets the Wild",
+        heroSubtitle: "A luxurious retreat surrounded by lush forests, misty hills and the untouched beauty of Maredumilli.",
       },
     });
 
